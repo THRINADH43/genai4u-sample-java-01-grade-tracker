@@ -3,7 +3,7 @@ import java.nio.file.Path;
 import java.util.List;
 import java.util.Scanner;
 
-public class Main {
+public class GradeTracker {
     private static final Path DATA = Path.of("grades.txt");
 
     public static void main(String[] args) {
@@ -18,7 +18,7 @@ public class Main {
         Scanner in = new Scanner(System.in);
         while (true) {
             System.out.println();
-            System.out.println("1) Add student  2) Add mark  3) Show report  4) Save and quit");
+            System.out.println("1) Add student  2) Add mark  3) Show report  4) Quit");
             System.out.print("Choose: ");
             if (!in.hasNextLine()) break;
             String choice = in.nextLine().trim();
@@ -27,6 +27,7 @@ public class Main {
                     case "1" -> {
                         System.out.print("Name: ");
                         book.addStudent(in.nextLine());
+                        save(file, book);
                         System.out.println("Added.");
                     }
                     case "2" -> {
@@ -34,11 +35,12 @@ public class Main {
                         Student s = book.find(in.nextLine());
                         System.out.print("Mark (0-100): ");
                         s.addMark(Integer.parseInt(in.nextLine().trim()));
+                        save(file, book);
                         System.out.println("Mark added.");
                     }
                     case "3" -> printReport(book);
                     case "4" -> {
-                        save(file, book);
+                        System.out.println("Bye!");
                         return;
                     }
                     default -> System.out.println("Please type 1, 2, 3 or 4.");
@@ -49,7 +51,6 @@ public class Main {
                 System.out.println(e.getMessage());
             }
         }
-        save(file, book);
     }
 
     static void printReport(GradeBook book) {
@@ -72,7 +73,6 @@ public class Main {
     static void save(GradeFile file, GradeBook book) {
         try {
             file.save(book);
-            System.out.println("Saved to " + DATA + ".");
         } catch (IOException e) {
             System.out.println("Could not save: " + e.getMessage());
         }
